@@ -1,4 +1,6 @@
 <script>
+	import { onMount } from 'svelte';
+
 	let selectedUserType = 'arbeitnehmer';
 
 	function handleUserTypeSelection(type) {
@@ -10,40 +12,41 @@
 		console.log('Registration clicked');
 	}
 
-	window.addEventListener('scroll', () => {
-	const bar = document.getElementById('mobile-register-bar');
-	const header = document.querySelector('.header');
-	const isMobile = window.innerWidth <= 768;
+	onMount(() => {
+		window.addEventListener('scroll', () => {
+			const bar = document.getElementById('mobile-register-bar');
+			const header = document.querySelector('.header');
+			const isMobile = window.innerWidth <= 768;
 
-	const scrollTop = window.scrollY;
-	const barBtn = bar.querySelector('.register-btn');
-	const headerBtn = header.querySelector('.register-btn');
+			const scrollTop = window.scrollY;
+			const barBtn = bar?.querySelector('.register-btn');
+			const headerBtn = header?.querySelector('.register-btn');
 
-	if (isMobile) {
-		if (scrollTop > 0) {
-			if (!headerBtn && barBtn) {
-				const newBtn = barBtn.cloneNode(true);
-				newBtn.onclick = handleRegistration;
-				newBtn.style.marginLeft = '10px';
-				header.appendChild(newBtn);
+			if (isMobile) {
+				if (scrollTop > 0) {
+					if (!headerBtn && barBtn) {
+						const newBtn = barBtn.cloneNode(true);
+						newBtn.onclick = handleRegistration;
+						newBtn.style.marginLeft = '10px';
+						header.appendChild(newBtn);
+					}
+					bar.style.display = 'none';
+					if (barBtn) bar.removeChild(barBtn);
+				} else {
+					if (!barBtn && headerBtn) {
+						const newBtn = headerBtn.cloneNode(true);
+						newBtn.onclick = handleRegistration;
+						bar.appendChild(newBtn);
+						header.removeChild(headerBtn);
+					}
+					bar.style.display = 'flex';
+				}
+			} else {
+				if (headerBtn) header.removeChild(headerBtn);
+				bar.style.display = 'none';
 			}
-			bar.style.display = 'none';
-			if (barBtn) bar.removeChild(barBtn);
-		} else {
-			if (!barBtn && headerBtn) {
-				const newBtn = headerBtn.cloneNode(true);
-				newBtn.onclick = handleRegistration;
-				bar.appendChild(newBtn);
-				header.removeChild(headerBtn);
-			}
-			bar.style.display = 'flex';
-		}
-	} else {
-		// Desktop — always remove mobile header button if present
-		if (headerBtn) header.removeChild(headerBtn);
-		bar.style.display = 'none';
-	}
-});
+		});
+	});
 </script>
 
 <main class="job-website">
